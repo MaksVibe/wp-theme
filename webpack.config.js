@@ -1,35 +1,28 @@
 const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  mode: "production",
-  entry: "./src/index.js",
-  output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "dist"),
+  mode: "development",
+  entry: {
+    index: "./src/index.js",
+    print: "./src/print.js",
+  },
+  devtool: "inline-source-map",
+  devServer: {
+    static: "./dist",
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css",
+    new HtmlWebpackPlugin({
+      title: "Development",
     }),
   ],
+  output: {
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, "dist"),
+    clean: true,
+    publicPath: "/",
+  },
   optimization: {
-    minimizer: [
-      // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
-      // `...`,
-      new CssMinimizerPlugin(),
-    ],
-    splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: "styles",
-          type: "css/mini-extract",
-          chunks: "all",
-          enforce: true,
-        },
-      },
-    },
+    runtimeChunk: "single",
   },
 };
